@@ -1,0 +1,8 @@
+[package]
+name = "tide-fs"
+version = "0.1.0"
+authors = ["Mendelt Siebenga <mendelt@mendelt.nl>"]
+edition = "2018"
+
+[dependencies]
+tide = "0.16.0"
