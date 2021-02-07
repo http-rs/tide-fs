@@ -1,8 +1,15 @@
 [package]
 name = "tide-fs"
 version = "0.1.0"
-authors = ["Mendelt Siebenga <mendelt@mendelt.nl>"]
 edition = "2018"
+
+authors = ["Mendelt Siebenga <msiebenga@gmail.com>"]
+license = "MIT/Apache-2.0"
+description = "File system handlers for the Tide web-framework"
+repository = "https://github.com/mendelt/tide-fs"
+categories = ["network-programming", "web-programming::http-server"]
+keywords = ["tide", "http", "web", "routing"]
+readme = "README.md"
 
 [dependencies]
 tide = "0.16.0"
