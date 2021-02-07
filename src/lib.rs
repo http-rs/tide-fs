@@ -85,3 +85,43 @@ impl<State: Clone + Send + Sync + 'static> Endpoint<State> for ServeFile {
         }
     }
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    use std::{fs::File, io::Write};
+    use tempfile::TempDir;
+
+    const TEXT_CONTENT: &str = "hello world";
+
+    /// Initialize a temporary directory with some test files
+    fn setup_test_dir() -> TempDir {
+        let tmp_dir = TempDir::new().unwrap();
+
+        let mut html_file = File::create(tmp_dir.path().join("index.html")).unwrap();
+        write!(html_file, "hello world").unwrap();
+        html_file.flush().unwrap();
+
+        let mut text_file = File::create(tmp_dir.path().join("file.txt")).unwrap();
+        write!(text_file, "hello world").unwrap();
+        text_file.flush().unwrap();
+
+        tmp_dir
+    }
+
+    #[async_std::test]
+    async fn should_serve_single_file() {
+        let tmp_dir = setup_test_dir();
+
+        let mut server = tide::new();
+        server
+            .at("/file")
+            .get(ServeFile::serve(tmp_dir.path().join("file.txt")).unwrap());
+
+        let client = surf::Client::with_http_client(server);
+        let mut res = client.get("http://localhost/file").await.unwrap();
+
+        assert_eq!(res.body_string().await.unwrap(), TEXT_CONTENT);
+    }
+}
