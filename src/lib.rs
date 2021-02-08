@@ -156,7 +156,10 @@ mod when_serving_directory {
             .get(ServeDir::serve(tmp_dir.path(), "path").unwrap());
 
         let client = surf::Client::with_http_client(server);
-        let mut res = client.get("http://localhost/directory/index.html").await.unwrap();
+        let mut res = client
+            .get("http://localhost/directory/index.html")
+            .await
+            .unwrap();
 
         assert_eq!(res.body_string().await.unwrap(), TEXT_CONTENT);
     }
@@ -171,7 +174,10 @@ mod when_serving_directory {
             .get(ServeDir::serve(tmp_dir.path(), "path").unwrap());
 
         let client = surf::Client::with_http_client(server);
-        let res = client.get("http://localhost/directory/bla.html").await.unwrap();
+        let res = client
+            .get("http://localhost/directory/bla.html")
+            .await
+            .unwrap();
 
         assert_eq!(res.status(), StatusCode::NotFound);
     }
