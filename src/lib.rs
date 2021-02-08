@@ -124,4 +124,34 @@ mod test {
 
         assert_eq!(res.body_string().await.unwrap(), TEXT_CONTENT);
     }
+
+    #[async_std::test]
+    async fn should_serve_directory() {
+        let tmp_dir = setup_test_dir();
+
+        let mut server = tide::new();
+        server
+            .at("/directory/*path")
+            .get(ServeDir::serve(tmp_dir.path(), "path").unwrap());
+
+        let client = surf::Client::with_http_client(server);
+        let mut res = client.get("http://localhost/directory/index.html").await.unwrap();
+
+        assert_eq!(res.body_string().await.unwrap(), TEXT_CONTENT);
+    }
+
+    #[async_std::test]
+    async fn should_return_404_when_file_not_found() {
+        let tmp_dir = setup_test_dir();
+
+        let mut server = tide::new();
+        server
+            .at("/directory/*path")
+            .get(ServeDir::serve(tmp_dir.path(), "path").unwrap());
+
+        let client = surf::Client::with_http_client(server);
+        let res = client.get("http://localhost/directory/bla.html").await.unwrap();
+
+        assert_eq!(res.status(), StatusCode::NotFound);
+    }
 }
