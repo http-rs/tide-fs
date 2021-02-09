@@ -18,8 +18,7 @@
 //! ```
 //!
 //!
-//! `ServeDir` maps a section of a route to a directory, making all files
-//! inside that directory available on their own Url;
+//! `ServeDir` maps a section of a route to files in a directory
 //! ```rust
 //! # use tide::{Request, Result};
 //! # pub async fn endpoint(_: Request<()>) -> Result {
@@ -36,10 +35,33 @@
 //! The ServeDir endpoint requires you to define a route with a parameter
 //! the value of which is then mapped to files inside the directory that is served.
 
+use std::{io, path::Path};
+
+use prelude::{ServeDir, ServeFile};
+use tide::Route;
+
 pub mod serve_dir;
 pub mod serve_file;
 
 pub mod prelude {
     pub use crate::serve_dir::ServeDir;
     pub use crate::serve_file::ServeFile;
+    pub use crate::TideFsExt;
+}
+
+pub trait TideFsExt {
+    fn serve_file(&mut self, file: impl AsRef<Path>) -> io::Result<()>;
+    fn serve_dir(&mut self, dir: impl AsRef<Path>) -> io::Result<()>;
+}
+
+impl<'a, State: Clone + Send + Sync + 'static> TideFsExt for Route<'a, State> {
+    fn serve_file(&mut self, file: impl AsRef<Path>) -> io::Result<()> {
+        self.get(ServeFile::serve(file)?);
+        Ok(())
+    }
+
+    fn serve_dir(&mut self, dir: impl AsRef<Path>) -> io::Result<()> {
+        self.at("*path").get(ServeDir::serve(dir, "path")?);
+        Ok(())
+    }
 }
