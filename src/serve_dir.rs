@@ -118,4 +118,23 @@ mod when_serving_directory {
 
         assert_eq!(res.status(), StatusCode::NotFound);
     }
+
+    #[async_std::test]
+    async fn explicit_path_should_override_dir() {
+        let tmp_dir = setup_test_dir();
+
+        let mut server = tide::new();
+        server
+            .at("/*path")
+            .get(ServeDir::serve(tmp_dir.path(), "path").unwrap());
+
+        // When defining a specific route that overlaps with the hosted directory
+        server.at("index.html").get(|_| async { Ok("stuff") });
+
+        let client = surf::Client::with_http_client(server);
+        let mut res = client.get("http://localhost/index.html").await.unwrap();
+
+        // We expect the more explicit route to win
+        assert_eq!(res.body_string().await.unwrap(), "stuff");
+    }
 }
