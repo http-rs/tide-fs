@@ -18,7 +18,7 @@ pub struct ServeDir {
 impl ServeDir {
     /// Construct an endpoint for serving a directory. dir_path is the path of the directory to serve
     /// pattern is the name of the pattern from the request.
-    pub fn serve(dir_path: impl AsRef<Path>, pattern: &str) -> io::Result<Self> {
+    pub fn init(dir_path: impl AsRef<Path>, pattern: &str) -> io::Result<Self> {
         Ok(Self {
             dir_path: AsyncPathBuf::from(dir_path.as_ref().to_owned().canonicalize()?),
             pattern: pattern.to_string(),
@@ -90,7 +90,7 @@ mod when_serving_directory {
         let mut server = tide::new();
         server
             .at("/directory/*path")
-            .get(ServeDir::serve(tmp_dir.path(), "path").unwrap());
+            .get(ServeDir::init(tmp_dir.path(), "path").unwrap());
 
         let client = surf::Client::with_http_client(server);
         let mut res = client
@@ -108,7 +108,7 @@ mod when_serving_directory {
         let mut server = tide::new();
         server
             .at("/directory/*path")
-            .get(ServeDir::serve(tmp_dir.path(), "path").unwrap());
+            .get(ServeDir::init(tmp_dir.path(), "path").unwrap());
 
         let client = surf::Client::with_http_client(server);
         let res = client
@@ -126,7 +126,7 @@ mod when_serving_directory {
         let mut server = tide::new();
         server
             .at("/*path")
-            .get(ServeDir::serve(tmp_dir.path(), "path").unwrap());
+            .get(ServeDir::init(tmp_dir.path(), "path").unwrap());
 
         // When defining a specific route that overlaps with the hosted directory
         server.at("index.html").get(|_| async { Ok("stuff") });

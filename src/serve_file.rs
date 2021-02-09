@@ -13,7 +13,7 @@ pub struct ServeFile {
 }
 
 impl ServeFile {
-    pub fn serve(file_path: impl AsRef<Path>) -> io::Result<Self> {
+    pub fn init(file_path: impl AsRef<Path>) -> io::Result<Self> {
         Ok(Self {
             file_path: AsyncPathBuf::from(file_path.as_ref().to_owned().canonicalize()?),
         })
@@ -60,7 +60,7 @@ mod when_serving_file {
         let mut server = tide::new();
         server
             .at("/file")
-            .get(ServeFile::serve(tmp_dir.path().join("file.txt")).unwrap());
+            .get(ServeFile::init(tmp_dir.path().join("file.txt")).unwrap());
 
         let client = surf::Client::with_http_client(server);
         let mut res = client.get("http://localhost/file").await.unwrap();

@@ -12,7 +12,7 @@
 //!
 //! # fn main() -> std::io::Result<()> {
 //! let mut app = tide::new();
-//! app.at("index.html").get(ServeFile::serve("files/index.html")?);
+//! app.at("index.html").get(ServeFile::init("files/index.html")?);
 //! # Ok(())
 //! # }
 //! ```
@@ -28,7 +28,7 @@
 //!
 //! # fn main() -> std::io::Result<()> {
 //! let mut app = tide::new();
-//! app.at("static/css/*path").get(ServeDir::serve("static_content/css/", "path")?);
+//! app.at("static/css/*path").get(ServeDir::init("static_content/css/", "path")?);
 //! # Ok(())
 //! # }
 //! ```
@@ -56,12 +56,12 @@ pub trait TideFsExt {
 
 impl<'a, State: Clone + Send + Sync + 'static> TideFsExt for Route<'a, State> {
     fn serve_file(&mut self, file: impl AsRef<Path>) -> io::Result<()> {
-        self.get(ServeFile::serve(file)?);
+        self.get(ServeFile::init(file)?);
         Ok(())
     }
 
     fn serve_dir(&mut self, dir: impl AsRef<Path>) -> io::Result<()> {
-        self.at("*path").get(ServeDir::serve(dir, "path")?);
+        self.at("*path").get(ServeDir::init(dir, "path")?);
         Ok(())
     }
 }
