@@ -12,7 +12,7 @@ keywords = ["tide", "http", "web", "routing"]
 readme = "README.md"
 
 [dependencies]
-tide = "0.16"
+tide = { git = "https://github.com/mendelt/tide", branch = "remove_serve_file_dir" }
 log = "0.4"
 async-std = "1.9"
 
