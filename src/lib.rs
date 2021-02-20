@@ -14,7 +14,7 @@
 //!
 //! # fn main() -> std::io::Result<()> {
 //! let mut app = tide::new();
-//! app.at("index.html").serve_file("files/index.html")?;
+//! app.at("index.html").serve_file("examples/content/index.html")?;
 //! # Ok(())
 //! # }
 //! ```
@@ -30,7 +30,7 @@
 //!
 //! # fn main() -> std::io::Result<()> {
 //! let mut app = tide::new();
-//! app.at("static/css/").serve_dir("static_content/css/")?;
+//! app.at("static/").serve_dir("examples/content/")?;
 //! # Ok(())
 //! # }
 //! ```
