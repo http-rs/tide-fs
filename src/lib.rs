@@ -1,7 +1,7 @@
 //! Tide-fs contains extensions for the Tide web-framework to serve files
 //! or whole directories from your file-system. Tide-fs provides a `ServeDir`
 //! and a `ServeFile` endpoint. It also provides a convenient extension trait
-//! to the `tide::Route` type that allow you to add these endpoints with the 
+//! to the `tide::Route` type that allow you to add these endpoints with the
 //! `serve_dir` and `serve_file` methods.
 //!
 //! `ServeFile` serves a single file on a single route;
