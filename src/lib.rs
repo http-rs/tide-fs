@@ -7,9 +7,6 @@
 //! `ServeFile` serves a single file on a single route;
 //! ```rust
 //! # use tide::{Request, Result};
-//! # pub async fn endpoint(_: Request<()>) -> Result {
-//! #     todo!()
-//! # }
 //! use tide_fs::prelude::*;
 //!
 //! # fn main() -> std::io::Result<()> {
@@ -23,9 +20,6 @@
 //! `ServeDir` maps a section of a route to files in a directory
 //! ```rust
 //! # use tide::{Request, Result};
-//! # pub async fn endpoint(_: Request<()>) -> Result {
-//! #     todo!()
-//! # }
 //! use tide_fs::prelude::*;
 //!
 //! # fn main() -> std::io::Result<()> {
