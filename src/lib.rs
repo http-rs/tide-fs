@@ -28,8 +28,6 @@
 //! # Ok(())
 //! # }
 //! ```
-//! The ServeDir endpoint requires you to define a route with a parameter
-//! the value of which is then mapped to files inside the directory that is served.
 
 use std::{io, path::Path};
 
