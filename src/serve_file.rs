@@ -1,3 +1,5 @@
+//! Endpoint for serving file contents
+
 use async_std::path::PathBuf as AsyncPathBuf;
 use std::io;
 use std::path::Path;
@@ -13,6 +15,7 @@ pub struct ServeFile {
 }
 
 impl ServeFile {
+    /// Construct an endpoint for serving a file. file_path is the path of the file to serve
     pub fn init(file_path: impl AsRef<Path>) -> io::Result<Self> {
         Ok(Self {
             file_path: AsyncPathBuf::from(file_path.as_ref().to_owned().canonicalize()?),

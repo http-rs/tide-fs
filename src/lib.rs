@@ -29,6 +29,17 @@
 //! # }
 //! ```
 
+// Turn on warnings for some lints
+#![warn(
+    missing_debug_implementations,
+    missing_docs,
+    trivial_casts,
+    trivial_numeric_casts,
+    unreachable_pub,
+    unused_import_braces,
+    unused_qualifications
+)]
+
 use std::{io, path::Path};
 
 use prelude::{ServeDir, ServeFile};
@@ -37,17 +48,17 @@ use tide::Route;
 pub mod serve_dir;
 pub mod serve_file;
 
+/// Import everything needed to serve files and directories at the same time
 pub mod prelude {
     pub use crate::serve_dir::ServeDir;
     pub use crate::serve_file::ServeFile;
     pub use crate::TideFsExt;
 }
 
+/// Extension methods for serving contents from the filesytem
 pub trait TideFsExt {
+    /// Serve the contents of a file or directory at this location
     fn serve_fs(&mut self, path: impl AsRef<Path>) -> io::Result<()>;
-
-    fn serve_file(&mut self, file: impl AsRef<Path>) -> io::Result<()>;
-    fn serve_dir(&mut self, dir: impl AsRef<Path>) -> io::Result<()>;
 }
 
 impl<'a, State: Clone + Send + Sync + 'static> TideFsExt for Route<'a, State> {
@@ -56,21 +67,10 @@ impl<'a, State: Clone + Send + Sync + 'static> TideFsExt for Route<'a, State> {
 
         if path.is_file() {
             self.get(ServeFile::init(path)?);
-        }
-        else {
+        } else {
             self.at("*path").get(ServeDir::init(path, "path")?);
         }
 
-        Ok(())
-    }
-
-    fn serve_file(&mut self, file: impl AsRef<Path>) -> io::Result<()> {
-        self.get(ServeFile::init(file)?);
-        Ok(())
-    }
-
-    fn serve_dir(&mut self, dir: impl AsRef<Path>) -> io::Result<()> {
-        self.at("*path").get(ServeDir::init(dir, "path")?);
         Ok(())
     }
 }

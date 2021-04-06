@@ -1,3 +1,5 @@
+//! Endpoint for serving directory contents
+
 use async_std::path::PathBuf as AsyncPathBuf;
 use log;
 use std::ffi::OsStr;
