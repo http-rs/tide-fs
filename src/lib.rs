@@ -44,11 +44,26 @@ pub mod prelude {
 }
 
 pub trait TideFsExt {
+    fn serve_fs(&mut self, path: impl AsRef<Path>) -> io::Result<()>;
+
     fn serve_file(&mut self, file: impl AsRef<Path>) -> io::Result<()>;
     fn serve_dir(&mut self, dir: impl AsRef<Path>) -> io::Result<()>;
 }
 
 impl<'a, State: Clone + Send + Sync + 'static> TideFsExt for Route<'a, State> {
+    fn serve_fs(&mut self, path: impl AsRef<Path>) -> io::Result<()> {
+        let path = path.as_ref();
+
+        if path.is_file() {
+            self.get(ServeFile::init(path)?);
+        }
+        else {
+            self.at("*path").get(ServeDir::init(path, "path")?);
+        }
+
+        Ok(())
+    }
+
     fn serve_file(&mut self, file: impl AsRef<Path>) -> io::Result<()> {
         self.get(ServeFile::init(file)?);
         Ok(())
