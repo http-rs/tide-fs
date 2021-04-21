@@ -64,6 +64,7 @@ pub trait TideFsExt {
     /// Serve the contents of a file or directory at this location
     fn serve_fs(&mut self, path: impl AsRef<Path>) -> io::Result<()>;
 
+    /// Serve the contents of a directory that was compiled into your application using the `include!` macro from the `include_dir` crate
     fn serve_compiled_dir(
         &mut self,
         dir: include_dir::Dir<'static>,

@@ -1,9 +1,12 @@
+//! Endpoint for serving directory contents from a directory compiled into the binary
+
 use include_dir::{Dir, DirEntry, File};
 use std::ffi::OsStr;
 use tide::http::{content::ContentType, mime::Mime};
 use tide::{utils::async_trait, Endpoint, Request, Response, Result};
 
-#[derive(Clone)]
+/// Endpoint for serving directories compiled into the binary
+#[derive(Debug, Clone)]
 pub struct ServeDirCompiled {
     dir: Dir<'static>,
     index_file: Option<&'static str>,
@@ -11,6 +14,7 @@ pub struct ServeDirCompiled {
 }
 
 impl ServeDirCompiled {
+    /// Construct a new `ServeDirCompiled` struct
     pub fn new(dir: Dir<'static>, pattern: &'static str) -> Self {
         Self {
             pattern,
@@ -19,6 +23,7 @@ impl ServeDirCompiled {
         }
     }
 
+    /// Set an index file
     pub fn with_index_file(mut self, file: Option<&'static str>) -> Self {
         self.index_file = file;
         self
